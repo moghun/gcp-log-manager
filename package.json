@@ -1,0 +1,26 @@
+{
+  "name": "gcp-log-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moghun/gcp-log-manager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moghun/gcp-log-manager/issues"
+  },
+  "homepage": "https://github.com/moghun/gcp-log-manager#readme",
+  "dependencies": {
+    "@google-cloud/dataflow": "^3.0.0",
+    "@google-cloud/pubsub": "^4.0.1",
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2"
+  }
+}
