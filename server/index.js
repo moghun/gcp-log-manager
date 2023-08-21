@@ -146,6 +146,18 @@ app.get("/api/getAnalytics", async (req, res) => {
     const [dailyNewUsers] = await bigquery.query(queryDailyNewUsers);
     const [avgTime] = await bigquery.query(queryAvgTime);
 
+    // Calculate average session time for each day
+    const avgTimeCalculated = avgTime.map((row) => {
+      const daily_avg =
+        row.user_sessions.reduce((acc, session) => {
+          return acc + session.session_duration_seconds;
+        }, 0) / row.user_sessions.length;
+      return {
+        date: row.date,
+        avg_session: Math.floor(daily_avg),
+      };
+    });
+
     const dailyStats = [];
     // Combine all data into a single object to be returned as response
     const activtyRecords = {
