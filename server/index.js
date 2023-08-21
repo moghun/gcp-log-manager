@@ -159,6 +159,21 @@ app.get("/api/getAnalytics", async (req, res) => {
     });
 
     const dailyStats = [];
+
+    // Combine all data into a single daily stats object
+    for (let i = 0; i < dailyActiveUsers.length; i++) {
+      const record = {
+        date: dailyActiveUsers[i] != null ? dailyActiveUsers[i].date.value : 0,
+        average_session_duration:
+          avgTimeCalculated[i] != null ? avgTimeCalculated[i].avg_session : 0,
+        active_user_count:
+          dailyActiveUsers[i] != null ? dailyActiveUsers[i].distinct_users : 0,
+        new_user_count:
+          dailyNewUsers[i] != null ? dailyNewUsers[i].daily_new_users : 0,
+      };
+      dailyStats.push(record);
+    }
+
     // Combine all data into a single object to be returned as response
     const activtyRecords = {
       total_users: totalUsers[0] != null ? totalUsers[0].total_users : 0,
