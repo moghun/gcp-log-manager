@@ -27,27 +27,6 @@ const bigquery = new BigQuery({
 });
 
 app.use(bodyParser.json());
-
-// Executes a shell script - returns the executing process as child process to be able to sync with the calling process
-function executeScript(command) {
-  shell.chmod("+x", command);
-  var child = require("child_process").exec(command);
-  child.stdout.pipe(process.stdout);
-  return child;
-}
-
-// Cancel the Dataflow job before exiting
-function shutdown() {
-  console.log("\nReceived kill signal, canceling the Dataflow job...");
-
-  // Execute the shell script to cancel the Dataflow job
-  const exitProc = executeScript("./cancelDataflow.sh");
-  exitProc.on("exit", function () {
-    process.exit();
-  });
-  process.exit();
-}
-
 app.post("/api/postLog", async (req, res) => {
   const data = JSON.stringify(req.body);
   const dataBuffer = Buffer.from(data);
@@ -137,7 +116,6 @@ app.get("/api/getAnalytics", async (req, res) => {
     `;
 
     console.log("Analytics query is made at " + new Date().toISOString());
-
     // Execute queries
     const [totalUsers] = await bigquery.query(totalUsersQuery);
     const [dailyActiveUsers] = await bigquery.query(queryDailyActiveUsers);
@@ -173,7 +151,6 @@ app.get("/api/getAnalytics", async (req, res) => {
     }
 
     console.log("Analytics query is completed at " + new Date().toISOString());
-
     // Combine all data into a single object to be returned as response
     const activtyRecords = {
       total_users: totalUsers[0] != null ? totalUsers[0].total_users : 0,
@@ -190,13 +167,4 @@ app.get("/api/getAnalytics", async (req, res) => {
 // Run Express.js server to listen log and analytics requests
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-  console.log(`Creating the Dataflow job...`);
-  shell.cd(script_path);
-
-  // Execute the shell script to create the Dataflow job
-  executeScript("./startDataflow.sh");
 });
-
-// Handle kill signals to cancel the Dataflow job before exiting
-process.on("SIGTERM", shutdown);
-process.on("SIGINT", shutdown);
