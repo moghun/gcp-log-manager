@@ -60,7 +60,7 @@ npm install
 3. Start the application using Node.js:
 
 ```sh
-node ./server/index.js
+cd ./server; node ./index.js
 ```
 
 4. You can stop the application with `Command + C (CTRL + C)` command.
