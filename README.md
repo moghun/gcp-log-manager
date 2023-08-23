@@ -5,16 +5,20 @@ GCP Log Manager is a tool designed to collect app logs from devices and provide 
 ## System Overview
 
 1. The GCP Log Manager collects app logs from devices and provides analytics about daily user statistics.
-2.  The workflow involves event logs sent to the /api/postLog endpoint, which are published to Google Cloud Pub/Sub.
-3.  A Dataflow job then populates a Google BigQuery table, and the /api/getAnalytics API call queries BigQuery to retrieve daily user statistics.
+2. The workflow involves event logs sent to the /api/postLog endpoint, which are published to Google Cloud Pub/Sub.
+3. A Dataflow job then populates a Google BigQuery table, and the /api/getAnalytics API call queries BigQuery to retrieve daily user statistics.
 
 This solution streamlines log management, facilitates data analysis, and empowers users to make informed decisions based on log data.
 
 ## Installation and Setup
 
+### .env Setup
+
+Place create .env files on both server and scripts directory by following the .env.sample format with GCP account specific values.
+
 ### GCP Service Account Credentials
 
-Place your *GCP service account credentials JSON file* inside the project directory (./gcp-log-manager).
+Place your _GCP service account credentials JSON file_ inside the project directory (./gcp-log-manager).
 Name the JSON file gcp-service-account.json.
 
 ## Running the Application
@@ -24,11 +28,13 @@ Name the JSON file gcp-service-account.json.
 To run the GCP Log Manager as a Docker container, follow these steps:
 
 1. Make the start script executable:
+
 ```sh
 chmod +x ./start.sh
 ```
 
 2. Run the start script to build the Docker image, start the application container, and manage the Dataflow job:
+
 ```sh
 ./start.sh
 ```
@@ -40,27 +46,28 @@ chmod +x ./start.sh
 To run the GCP Log Manager without Docker, follow these steps:
 
 1. Make the start script and related scripts executable:
+
 ```sh
 chmod +x ./scripts/startDataflow.sh ./scripts/cancelDataflow.sh
 ```
-   
 
 2. Install the required dependencies by running the following command:
+
 ```sh
 npm install
 ```
 
 3. Start the application using Node.js:
+
 ```sh
 node ./server/index.js
 ```
-   
 
 4. You can stop the application with `Command + C (CTRL + C)` command.
 
 ## API Endpoints
 
-1. 	`POST localhost:8080/api/postLog`
+1.      `POST localhost:8080/api/postLog`
 
 This endpoint is used to send logs to the GCP Log Manager. The expected input format is as follows:
 
@@ -84,7 +91,6 @@ This endpoint returns a success message as a response.
 
 This endpoint provides aggregated daily user statistics. It returns data in a specific format as follows:
 
-
 ```json
 {
    "total_users": 916,
@@ -100,8 +106,16 @@ This endpoint provides aggregated daily user statistics. It returns data in a sp
 }
 ```
 
+## Using Helm for Deployment
 
+1. Build and push the docker image of this project to an image repository.
+2. Change the values of the "image" variables on ./helm/deployement.yaml and ./helm/templates/values.yaml
+3. Adjust deployment and service settings.
+4. Deploy the service with:
 
+```sh
+helm install gcp-log-manager .
+```
 
 ## Dependencies
 
