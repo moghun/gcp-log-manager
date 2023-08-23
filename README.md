@@ -39,7 +39,7 @@ chmod +x ./start.sh
 ./start.sh
 ```
 
-4. Prompt `exit` to close the application and remove the container/image
+3. Prompt `exit` to close the application and remove the container/image
 
 ### Non-Dockerized Version
 
