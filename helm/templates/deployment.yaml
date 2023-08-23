@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gcp-log-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gcp-log-manager
+  template:
+    metadata:
+      labels:
+        app: gcp-log-manager
+    spec:
+      containers:
+        - name: gcp-log-manager
+          image: #INSERT YOUR IMAGE REPOSITORY HERE
+          ports:
+            - containerPort: 8080
